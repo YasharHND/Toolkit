@@ -6,20 +6,37 @@
   "scripts": {
     "dev": "pnpm --filter app dev",
     "build": "pnpm --filter app build",
-    "lint": "pnpm -r --if-present run lint",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\" --ignore-path .gitignore",
-    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
     "prepare": "husky",
-    "cdk:synth": "pnpm --filter infra run synth",
-    "cdk:deploy": "pnpm --filter infra run deploy",
-    "cdk:destroy": "pnpm --filter infra run destroy",
-    "cdk:diff": "pnpm --filter infra run diff"
+    "infra": "dotenv -e .env -- cdk",
+    "infra:synth": "dotenv -e .env -- cdk synth",
+    "infra:deploy": "pnpm build && dotenv -e .env -- cdk deploy --require-approval never",
+    "infra:destroy": "dotenv -e .env -- cdk destroy",
+    "infra:diff": "dotenv -e .env -- cdk diff"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.232.1",
+    "constructs": "^10.4.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^22.19.1",
+    "dotenv-cli": "^7.4.4",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.6.14"
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.48.1"
   }
 }
