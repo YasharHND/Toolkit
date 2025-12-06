@@ -7,7 +7,6 @@ Follow these steps to complete the setup:
 From the root directory, run:
 
 ```bash
-cd /Users/yashar/Workspace/Toolkit
 pnpm install
 ```
 
@@ -15,21 +14,27 @@ This will install all dependencies for both the root workspace and the app folde
 
 ## Step 2: Initialize Husky
 
-After dependencies are installed, initialize Husky:
+After dependencies are installed, initialize Husky for git hooks:
 
 ```bash
 pnpm exec husky init
 ```
 
-This will create the `.husky/_` directory needed for git hooks.
+This will create the `.husky/_` directory and a default pre-commit hook.
 
-## Step 3: Make Hook Scripts Executable
+## Step 3: Configure Git Hooks
 
-Make the git hook scripts executable:
+Set up the pre-commit and commit-msg hooks:
 
 ```bash
-chmod +x .husky/pre-commit
-chmod +x .husky/commit-msg
+# Configure pre-commit hook
+echo "cd app && pnpm format:check && pnpm lint" > .husky/pre-commit
+
+# Configure commit-msg hook
+echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
+
+# Make them executable
+chmod +x .husky/pre-commit .husky/commit-msg
 ```
 
 ## Step 4: Verify Setup

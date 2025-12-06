@@ -33,19 +33,25 @@ toolkit/
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm 8+
+- Node.js 20+
+- pnpm 10+
 
 ### Installation
 
 Run this command from the **root directory**:
 
 ```bash
-cd /Users/yashar/Workspace/Toolkit
 pnpm install
 ```
 
 This will install all dependencies for both the root workspace and the app.
+
+After installation, initialize Husky for git hooks:
+
+```bash
+pnpm exec husky init
+chmod +x .husky/pre-commit .husky/commit-msg
+```
 
 ### Development
 
@@ -101,7 +107,7 @@ Automatically runs before each commit:
 If checks fail, the commit will be blocked. Fix issues with:
 
 ```bash
-pnpm format
+cd app && pnpm format
 cd app && pnpm lint:fix
 ```
 
@@ -126,8 +132,8 @@ git commit -m "updates"  # ❌ Will be rejected
 - `pnpm dev` - Start frontend dev server
 - `pnpm build` - Build frontend for production
 - `pnpm lint` - Run ESLint on frontend
-- `pnpm format` - Format all files with Prettier
-- `pnpm format:check` - Check formatting without changes
+- `pnpm format` - Format app files with Prettier
+- `pnpm format:check` - Check app formatting without changes
 
 ### App Level (run from `/app`)
 
