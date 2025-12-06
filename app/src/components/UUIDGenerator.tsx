@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal } from './Modal';
+import { Dropdown } from './Dropdown';
 
 type UUIDVersion = 'v4' | 'v5';
 
@@ -193,18 +194,20 @@ export function UUIDGenerator() {
               <label htmlFor="namespace" className="mb-2 block text-sm font-medium text-gray-300">
                 Namespace
               </label>
-              <select
-                id="namespace"
-                value={namespace}
-                onChange={(e) => handleNamespaceChange(e.target.value)}
-                className="w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-              >
-                <option value="">Select a namespace or enter custom UUID below</option>
-                <option value="DNS">DNS (Domain Name System)</option>
-                <option value="URL">URL (Uniform Resource Locator)</option>
-                <option value="OID">OID (ISO Object Identifier)</option>
-                <option value="X500">X500 (X.500 Distinguished Name)</option>
-              </select>
+              <Dropdown
+                options={[
+                  { value: '', label: 'Select a namespace or enter custom UUID below' },
+                  { value: 'DNS', label: 'DNS (Domain Name System)' },
+                  { value: 'URL', label: 'URL (Uniform Resource Locator)' },
+                  { value: 'OID', label: 'OID (ISO Object Identifier)' },
+                  { value: 'X500', label: 'X500 (X.500 Distinguished Name)' },
+                ]}
+                value={
+                  namespace && ['DNS', 'URL', 'OID', 'X500'].includes(namespace) ? namespace : ''
+                }
+                onChange={handleNamespaceChange}
+                placeholder="Select a namespace"
+              />
               <input
                 type="text"
                 placeholder="Or enter custom namespace UUID"
