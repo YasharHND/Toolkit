@@ -1,0 +1,20 @@
+{
+  "name": "toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Toolkit monorepo with React frontend and CDK infrastructure",
+  "scripts": {
+    "dev": "pnpm --filter app dev",
+    "build": "pnpm --filter app build",
+    "lint": "pnpm --filter app lint",
+    "format": "pnpm --filter app format",
+    "format:check": "pnpm --filter app format:check",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "husky": "^9.1.6",
+    "prettier": "^3.3.3"
+  }
+}
