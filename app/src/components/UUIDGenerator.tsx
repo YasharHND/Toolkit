@@ -8,19 +8,34 @@ export function UUIDGenerator() {
   const [namespace, setNamespace] = useState('');
   const [name, setName] = useState('');
 
+  // Clear v5 UUID when inputs change
+  const handleNamespaceChange = (value: string) => {
+    setNamespace(value);
+    setV5UUID('');
+    setV5Copied(false);
+    setV5CopiedPermanent(false);
+  };
+
+  const handleNameChange = (value: string) => {
+    setName(value);
+    setV5UUID('');
+    setV5Copied(false);
+    setV5CopiedPermanent(false);
+  };
+  const [count, setCount] = useState(1);
+
   // Separate states for each version
-  const [v4UUID, setV4UUID] = useState('');
+  const [v4UUIDs, setV4UUIDs] = useState<string[]>([]);
   const [v5UUID, setV5UUID] = useState('');
   const [v4Copied, setV4Copied] = useState(false);
   const [v5Copied, setV5Copied] = useState(false);
+  const [v5CopiedPermanent, setV5CopiedPermanent] = useState(false);
+  const [copiedIndices, setCopiedIndices] = useState<boolean[]>([]);
+  const [copiedButtonStates, setCopiedButtonStates] = useState<boolean[]>([]);
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
-  // Get current UUID and copied state based on version
-  const generatedUUID = version === 'v4' ? v4UUID : v5UUID;
-  const copied = version === 'v4' ? v4Copied : v5Copied;
 
   // UUID v4 generator
   const generateUUIDv4 = (): string => {
@@ -71,8 +86,11 @@ export function UUIDGenerator() {
 
   const handleGenerate = async () => {
     if (version === 'v4') {
-      setV4UUID(generateUUIDv4());
+      const uuids = Array.from({ length: count }, () => generateUUIDv4());
+      setV4UUIDs(uuids);
       setV4Copied(false);
+      setCopiedIndices(new Array(uuids.length).fill(false));
+      setCopiedButtonStates(new Array(uuids.length).fill(false));
     } else {
       // Check what's missing and create appropriate error message
       const missingFields = [];
@@ -89,19 +107,48 @@ export function UUIDGenerator() {
       const uuid = await generateUUIDv5(namespace, name);
       setV5UUID(uuid);
       setV5Copied(false);
+      setV5CopiedPermanent(false);
     }
   };
 
-  const handleCopy = async () => {
-    if (generatedUUID) {
-      await navigator.clipboard.writeText(generatedUUID);
-      if (version === 'v4') {
-        setV4Copied(true);
-        setTimeout(() => setV4Copied(false), 2000);
-      } else {
-        setV5Copied(true);
-        setTimeout(() => setV5Copied(false), 2000);
+  const handleCopy = async (uuid: string, index?: number) => {
+    await navigator.clipboard.writeText(uuid);
+    if (version === 'v4') {
+      if (index !== undefined) {
+        // Mark this specific UUID as copied permanently
+        const newCopiedStates = [...(copiedIndices || [])];
+        newCopiedStates[index] = true;
+        setCopiedIndices(newCopiedStates);
+
+        // Show button feedback temporarily
+        const newButtonStates = [...(copiedButtonStates || [])];
+        newButtonStates[index] = true;
+        setCopiedButtonStates(newButtonStates);
+        setTimeout(() => {
+          const resetStates = [...newButtonStates];
+          resetStates[index] = false;
+          setCopiedButtonStates(resetStates);
+        }, 2000);
       }
+    } else {
+      // Mark v5 UUID as copied permanently
+      setV5CopiedPermanent(true);
+
+      // Show button feedback temporarily
+      setV5Copied(true);
+      setTimeout(() => setV5Copied(false), 2000);
+    }
+  };
+
+  const handleCopyAll = async () => {
+    if (v4UUIDs.length > 0) {
+      await navigator.clipboard.writeText(v4UUIDs.join('\n'));
+      // Mark all as copied permanently
+      setCopiedIndices(new Array(v4UUIDs.length).fill(true));
+
+      // Show button feedback temporarily
+      setV4Copied(true);
+      setTimeout(() => setV4Copied(false), 2000);
     }
   };
 
@@ -149,7 +196,7 @@ export function UUIDGenerator() {
               <select
                 id="namespace"
                 value={namespace}
-                onChange={(e) => setNamespace(e.target.value)}
+                onChange={(e) => handleNamespaceChange(e.target.value)}
                 className="w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               >
                 <option value="">Select a namespace or enter custom UUID below</option>
@@ -164,7 +211,7 @@ export function UUIDGenerator() {
                 value={
                   namespace && !['DNS', 'URL', 'OID', 'X500'].includes(namespace) ? namespace : ''
                 }
-                onChange={(e) => setNamespace(e.target.value)}
+                onChange={(e) => handleNamespaceChange(e.target.value)}
                 className="mt-2 w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-white placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               />
             </div>
@@ -177,7 +224,7 @@ export function UUIDGenerator() {
                 type="text"
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Enter a name (e.g., example.com)"
                 className="w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-white placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               />
@@ -185,35 +232,160 @@ export function UUIDGenerator() {
           </div>
         )}
 
-        {/* Generate Button */}
-        <button
-          onClick={handleGenerate}
-          className="w-full rounded-lg bg-gradient-to-r from-orange-600 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:from-orange-700 hover:to-orange-600 active:scale-[0.98]"
-        >
-          Generate UUID
-        </button>
+        {/* Count Input for v4 and Generate Button */}
+        <div className="flex gap-3">
+          {version === 'v4' && (
+            <div className="relative w-32">
+              <input
+                type="text"
+                value={count}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value) || 1;
+                  setCount(Math.max(1, Math.min(100, val)));
+                }}
+                className="w-full rounded-lg border border-gray-600 bg-gray-700 py-3 pl-4 pr-10 text-center text-white [appearance:textfield] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
+              <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => setCount((c) => Math.min(100, c + 1))}
+                  className="rounded bg-gray-600 p-0.5 text-gray-300 transition-colors hover:bg-gray-500 hover:text-white"
+                  aria-label="Increment"
+                >
+                  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M5 15l7-7 7 7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCount((c) => Math.max(1, c - 1))}
+                  className="rounded bg-gray-600 p-0.5 text-gray-300 transition-colors hover:bg-gray-500 hover:text-white"
+                  aria-label="Decrement"
+                >
+                  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+          <button
+            onClick={handleGenerate}
+            className="flex-1 rounded-lg bg-gradient-to-r from-orange-600 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:from-orange-700 hover:to-orange-600 active:scale-[0.98]"
+          >
+            Generate UUID{version === 'v4' && count > 1 ? 's' : ''}
+          </button>
+        </div>
 
         {/* Generated UUID Display */}
-        {generatedUUID && (
-          <div className="mt-6" key={`uuid-display-${version}`}>
+        {version === 'v4' && v4UUIDs.length > 0 && (
+          <div className="mt-6" key="uuid-display-v4">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-sm font-medium text-gray-300">
+                Generated UUID{v4UUIDs.length > 1 ? 's' : ''}
+              </label>
+              {v4UUIDs.length > 1 && (
+                <button
+                  onClick={handleCopyAll}
+                  className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
+                    v4Copied
+                      ? 'bg-orange-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                  }`}
+                >
+                  {v4Copied ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Copied All
+                    </span>
+                  ) : (
+                    'Copy All'
+                  )}
+                </button>
+              )}
+            </div>
+            <div className="space-y-2">
+              {v4UUIDs.map((uuid, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={uuid}
+                    readOnly
+                    className={`flex-1 rounded-lg border px-4 py-2.5 font-mono transition-colors focus:outline-none ${
+                      copiedIndices[index] || v4Copied
+                        ? 'border-gray-700 bg-gray-800 text-gray-500'
+                        : 'border-gray-600 bg-gray-900 text-white'
+                    }`}
+                  />
+                  <button
+                    onClick={() => handleCopy(uuid, index)}
+                    className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
+                      copiedButtonStates[index]
+                        ? 'bg-orange-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                    }`}
+                  >
+                    {copiedButtonStates[index] ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Copied
+                      </span>
+                    ) : (
+                      'Copy'
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Generated UUID Display for v5 */}
+        {version === 'v5' && v5UUID && (
+          <div className="mt-6" key="uuid-display-v5">
             <label className="mb-2 block text-sm font-medium text-gray-300">Generated UUID</label>
             <div className="flex gap-2">
               <input
                 type="text"
-                value={generatedUUID}
+                value={v5UUID}
                 readOnly
-                className="flex-1 rounded-lg border border-gray-600 bg-gray-900 px-4 py-2.5 font-mono text-white focus:outline-none"
+                className={`flex-1 rounded-lg border px-4 py-2.5 font-mono transition-colors focus:outline-none ${
+                  v5CopiedPermanent
+                    ? 'border-gray-700 bg-gray-800 text-gray-500'
+                    : 'border-gray-600 bg-gray-900 text-white'
+                }`}
               />
               <button
-                key={`copy-btn-${version}`}
-                onClick={handleCopy}
+                onClick={() => handleCopy(v5UUID)}
                 className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
-                  copied
+                  v5Copied
                     ? 'bg-orange-600 text-white'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
                 }`}
               >
-                {copied ? (
+                {v5Copied ? (
                   <span className="flex items-center gap-2">
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                       <path
