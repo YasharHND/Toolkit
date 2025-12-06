@@ -9,12 +9,16 @@
     "lint": "pnpm --filter app lint",
     "format": "pnpm --filter app format",
     "format:check": "pnpm --filter app format:check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "cdk:synth": "pnpm --filter infra run synth",
+    "cdk:deploy": "pnpm --filter infra run deploy",
+    "cdk:destroy": "pnpm --filter infra run destroy",
+    "cdk:diff": "pnpm --filter infra run diff"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "husky": "^9.1.6",
-    "prettier": "^3.3.3"
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7",
+    "prettier": "^3.7.4"
   }
 }
