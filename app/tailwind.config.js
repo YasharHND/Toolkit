@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Tomorrow', 'system-ui', 'sans-serif'],
+      },
       colors: {
         orange: {
           50: '#fff7ed',
