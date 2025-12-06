@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import * as cdk from "aws-cdk-lib";
-import { ToolkitStack } from "../lib/toolkit-stack";
+import * as cdk from 'aws-cdk-lib';
+import { ToolkitStack } from '../lib/toolkit-stack';
 
 const app = new cdk.App();
 
@@ -28,12 +28,12 @@ const missingVars = Object.entries(requiredEnvVars)
 
 if (missingVars.length > 0) {
   throw new Error(
-    `Missing required environment variables: ${missingVars.join(", ")}\n` +
-      "Please ensure all required variables are set in your .env file."
+    `Missing required environment variables: ${missingVars.join(', ')}\n` +
+      'Please ensure all required variables are set in your .env file.'
   );
 }
 
-new ToolkitStack(app, "ToolkitStack", {
+new ToolkitStack(app, 'ToolkitStack', {
   env: {
     region,
     account,

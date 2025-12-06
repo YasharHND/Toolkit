@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "pnpm --filter app dev",
     "build": "pnpm --filter app build",
-    "lint": "pnpm --filter app lint",
-    "format": "pnpm --filter app format",
-    "format:check": "pnpm --filter app format:check",
+    "lint": "pnpm -r --if-present run lint",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\" --ignore-path .gitignore",
     "prepare": "husky",
     "cdk:synth": "pnpm --filter infra run synth",
     "cdk:deploy": "pnpm --filter infra run deploy",
@@ -19,6 +19,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "husky": "^9.1.7",
-    "prettier": "^3.7.4"
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.6.14"
   }
 }
