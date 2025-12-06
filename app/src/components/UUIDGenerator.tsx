@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Modal } from './Modal';
 
 type UUIDVersion = 'v4' | 'v5';
 
@@ -12,6 +13,10 @@ export function UUIDGenerator() {
   const [v5UUID, setV5UUID] = useState('');
   const [v4Copied, setV4Copied] = useState(false);
   const [v5Copied, setV5Copied] = useState(false);
+
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   // Get current UUID and copied state based on version
   const generatedUUID = version === 'v4' ? v4UUID : v5UUID;
@@ -69,10 +74,18 @@ export function UUIDGenerator() {
       setV4UUID(generateUUIDv4());
       setV4Copied(false);
     } else {
-      if (!namespace || !name) {
-        alert('Please provide both namespace and name for UUID v5');
+      // Check what's missing and create appropriate error message
+      const missingFields = [];
+      if (!namespace) missingFields.push('namespace');
+      if (!name) missingFields.push('name');
+
+      if (missingFields.length > 0) {
+        const fieldList = missingFields.length === 2 ? 'namespace and name' : missingFields[0];
+        setModalMessage(`Please provide a ${fieldList} for UUID v5`);
+        setShowModal(true);
         return;
       }
+
       const uuid = await generateUUIDv5(namespace, name);
       setV5UUID(uuid);
       setV5Copied(false);
@@ -231,6 +244,14 @@ export function UUIDGenerator() {
           </p>
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title="Missing Information"
+        message={modalMessage}
+      />
     </div>
   );
 }
