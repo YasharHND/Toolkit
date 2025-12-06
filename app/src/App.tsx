@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
-import { UUIDGenerator } from './components/UUIDGenerator';
-
-type Tab = 'uuid';
+import { Home } from './pages/Home';
+import { UUIDPage } from './pages/UUIDPage';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('uuid');
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
-
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {activeTab === 'uuid' && <UUIDGenerator />}
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className="flex min-h-screen flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <Header />
+        <div className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/uuid" element={<UUIDPage />} />
+          </Routes>
+        </div>
+      </div>
+    </BrowserRouter>
   );
 }
 

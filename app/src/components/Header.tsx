@@ -1,18 +1,14 @@
-type Tab = 'uuid';
+import { Link, useLocation } from 'react-router-dom';
 
-interface HeaderProps {
-  activeTab: Tab;
-  onTabChange: (tab: Tab) => void;
-}
-
-export function Header({ activeTab, onTabChange }: HeaderProps) {
-  const tabs: { id: Tab; label: string }[] = [{ id: 'uuid', label: 'UUID' }];
+export function Header() {
+  const location = useLocation();
+  const tabs = [{ path: '/uuid', label: 'UUID' }];
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-700 bg-gray-900 shadow-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
               <svg
                 className="h-6 w-6 text-white"
@@ -35,21 +31,21 @@ export function Header({ activeTab, onTabChange }: HeaderProps) {
               </svg>
             </div>
             <h1 className="text-xl font-bold text-white">Toolkit</h1>
-          </div>
+          </Link>
 
           <nav className="flex gap-1">
             {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
+              <Link
+                key={tab.path}
+                to={tab.path}
                 className={`rounded-lg px-4 py-2 font-medium transition-colors ${
-                  activeTab === tab.id
+                  location.pathname === tab.path
                     ? 'bg-orange-600 text-white'
                     : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                 }`}
               >
                 {tab.label}
-              </button>
+              </Link>
             ))}
           </nav>
         </div>
