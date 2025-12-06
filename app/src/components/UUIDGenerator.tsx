@@ -122,13 +122,17 @@ export function UUIDGenerator() {
         setCopiedIndices(newCopiedStates);
 
         // Show button feedback temporarily
-        const newButtonStates = [...(copiedButtonStates || [])];
-        newButtonStates[index] = true;
-        setCopiedButtonStates(newButtonStates);
+        setCopiedButtonStates((prev) => {
+          const newButtonStates = [...prev];
+          newButtonStates[index] = true;
+          return newButtonStates;
+        });
         setTimeout(() => {
-          const resetStates = [...newButtonStates];
-          resetStates[index] = false;
-          setCopiedButtonStates(resetStates);
+          setCopiedButtonStates((prev) => {
+            const resetStates = [...prev];
+            resetStates[index] = false;
+            return resetStates;
+          });
         }, 2000);
       }
     } else {
