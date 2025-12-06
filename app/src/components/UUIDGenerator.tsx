@@ -155,19 +155,19 @@ export function UUIDGenerator() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="rounded-xl border border-gray-700 bg-gray-800 p-8 shadow-xl">
+      <div className="rounded-xl border border-zinc-600 bg-zinc-700 p-8 shadow-xl">
         <h2 className="mb-6 text-2xl font-bold text-white">UUID Generator</h2>
 
         {/* Version Selection */}
         <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium text-gray-300">UUID Version</label>
+          <label className="mb-2 block text-sm font-medium text-zinc-300">UUID Version</label>
           <div className="flex gap-3">
             <button
               onClick={() => setVersion('v4')}
               className={`flex-1 rounded-lg border-2 px-4 py-3 font-medium transition-all ${
                 version === 'v4'
                   ? 'border-orange-600 bg-orange-600 text-white'
-                  : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-orange-500 hover:text-white'
+                  : 'border-zinc-500 bg-zinc-600 text-zinc-300 hover:border-orange-500 hover:text-white'
               }`}
             >
               <div className="text-lg">Version 4</div>
@@ -178,7 +178,7 @@ export function UUIDGenerator() {
               className={`flex-1 rounded-lg border-2 px-4 py-3 font-medium transition-all ${
                 version === 'v5'
                   ? 'border-orange-600 bg-orange-600 text-white'
-                  : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-orange-500 hover:text-white'
+                  : 'border-zinc-500 bg-zinc-600 text-zinc-300 hover:border-orange-500 hover:text-white'
               }`}
             >
               <div className="text-lg">Version 5</div>
@@ -191,7 +191,7 @@ export function UUIDGenerator() {
         {version === 'v5' && (
           <div className="mb-6 space-y-4">
             <div>
-              <label htmlFor="namespace" className="mb-2 block text-sm font-medium text-gray-300">
+              <label htmlFor="namespace" className="mb-2 block text-sm font-medium text-zinc-300">
                 Namespace
               </label>
               <Dropdown
@@ -215,12 +215,12 @@ export function UUIDGenerator() {
                   namespace && !['DNS', 'URL', 'OID', 'X500'].includes(namespace) ? namespace : ''
                 }
                 onChange={(e) => handleNamespaceChange(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-white placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                className="mt-2 w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               />
             </div>
 
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-300">
+              <label htmlFor="name" className="mb-2 block text-sm font-medium text-zinc-300">
                 Name
               </label>
               <input
@@ -229,7 +229,7 @@ export function UUIDGenerator() {
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Enter a name (e.g., example.com)"
-                className="w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-white placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                className="w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               />
             </div>
           </div>
@@ -246,13 +246,13 @@ export function UUIDGenerator() {
                   const val = parseInt(e.target.value) || 1;
                   setCount(Math.max(1, Math.min(100, val)));
                 }}
-                className="w-full rounded-lg border border-gray-600 bg-gray-700 py-3 pl-4 pr-10 text-center text-white [appearance:textfield] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="w-full rounded-lg border border-zinc-500 bg-zinc-600 py-3 pl-4 pr-10 text-center text-white [appearance:textfield] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
               <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-0.5">
                 <button
                   type="button"
                   onClick={() => setCount((c) => Math.min(100, c + 1))}
-                  className="rounded bg-gray-600 p-0.5 text-gray-300 transition-colors hover:bg-gray-500 hover:text-white"
+                  className="rounded bg-zinc-500 p-0.5 text-zinc-300 transition-colors hover:bg-zinc-400 hover:text-white"
                   aria-label="Increment"
                 >
                   <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,7 +267,7 @@ export function UUIDGenerator() {
                 <button
                   type="button"
                   onClick={() => setCount((c) => Math.max(1, c - 1))}
-                  className="rounded bg-gray-600 p-0.5 text-gray-300 transition-colors hover:bg-gray-500 hover:text-white"
+                  className="rounded bg-zinc-500 p-0.5 text-zinc-300 transition-colors hover:bg-zinc-400 hover:text-white"
                   aria-label="Decrement"
                 >
                   <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -294,7 +294,7 @@ export function UUIDGenerator() {
         {version === 'v4' && v4UUIDs.length > 0 && (
           <div className="mt-6" key="uuid-display-v4">
             <div className="mb-2 flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-300">
+              <label className="text-sm font-medium text-zinc-300">
                 Generated UUID{v4UUIDs.length > 1 ? 's' : ''}
               </label>
               {v4UUIDs.length > 1 && (
@@ -303,7 +303,7 @@ export function UUIDGenerator() {
                   className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
                     v4Copied
                       ? 'bg-orange-600 text-white'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                      : 'bg-zinc-600 text-zinc-300 hover:bg-zinc-500 hover:text-white'
                   }`}
                 >
                   {v4Copied ? (
@@ -332,8 +332,8 @@ export function UUIDGenerator() {
                     readOnly
                     className={`flex-1 rounded-lg border px-4 py-2.5 font-mono transition-colors focus:outline-none ${
                       copiedIndices[index] || v4Copied
-                        ? 'border-gray-700 bg-gray-800 text-gray-500'
-                        : 'border-gray-600 bg-gray-900 text-white'
+                        ? 'border-zinc-600 bg-zinc-800 text-zinc-500'
+                        : 'border-zinc-500 bg-zinc-900 text-white'
                     }`}
                   />
                   <button
@@ -341,7 +341,7 @@ export function UUIDGenerator() {
                     className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
                       copiedButtonStates[index]
                         ? 'bg-orange-600 text-white'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                        : 'bg-zinc-600 text-zinc-300 hover:bg-zinc-500 hover:text-white'
                     }`}
                   >
                     {copiedButtonStates[index] ? (
@@ -368,7 +368,7 @@ export function UUIDGenerator() {
         {/* Generated UUID Display for v5 */}
         {version === 'v5' && v5UUID && (
           <div className="mt-6" key="uuid-display-v5">
-            <label className="mb-2 block text-sm font-medium text-gray-300">Generated UUID</label>
+            <label className="mb-2 block text-sm font-medium text-zinc-300">Generated UUID</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -376,8 +376,8 @@ export function UUIDGenerator() {
                 readOnly
                 className={`flex-1 rounded-lg border px-4 py-2.5 font-mono transition-colors focus:outline-none ${
                   v5CopiedPermanent
-                    ? 'border-gray-700 bg-gray-800 text-gray-500'
-                    : 'border-gray-600 bg-gray-900 text-white'
+                    ? 'border-zinc-600 bg-zinc-800 text-zinc-500'
+                    : 'border-zinc-500 bg-zinc-900 text-white'
                 }`}
               />
               <button
@@ -385,7 +385,7 @@ export function UUIDGenerator() {
                 className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
                   v5Copied
                     ? 'bg-orange-600 text-white'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                    : 'bg-zinc-600 text-zinc-300 hover:bg-zinc-500 hover:text-white'
                 }`}
               >
                 {v5Copied ? (
@@ -408,11 +408,11 @@ export function UUIDGenerator() {
         )}
 
         {/* Info Section */}
-        <div className="mt-6 rounded-lg bg-gray-900 p-4">
+        <div className="mt-6 rounded-lg bg-zinc-800 p-4">
           <h3 className="mb-2 font-semibold text-orange-500">
             {version === 'v4' ? 'UUID Version 4' : 'UUID Version 5'}
           </h3>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-zinc-400">
             {version === 'v4'
               ? 'Generates a random UUID using cryptographically strong random values. Each UUID is unique and unpredictable.'
               : 'Generates a deterministic UUID based on a namespace and name using SHA-1 hashing. The same namespace and name will always produce the same UUID.'}

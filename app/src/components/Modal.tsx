@@ -14,13 +14,13 @@ export function Modal({ isOpen, onClose, title, message }: ModalProps) {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative z-10 w-full max-w-md rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-2xl">
+      <div className="relative z-10 w-full max-w-md rounded-xl border border-zinc-600 bg-zinc-700 p-6 shadow-2xl">
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 transition-colors hover:text-white"
+            className="text-zinc-400 transition-colors hover:text-white"
             aria-label="Close"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@ export function Modal({ isOpen, onClose, title, message }: ModalProps) {
         </div>
 
         {/* Message */}
-        <p className="mb-6 text-gray-300">{message}</p>
+        <p className="mb-6 text-zinc-300">{message}</p>
 
         {/* Button */}
         <div className="flex justify-end">

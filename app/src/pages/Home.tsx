@@ -35,7 +35,7 @@ export function Home() {
             </div>
           </div>
           <h1 className="mb-4 text-5xl font-bold text-white">Toolkit</h1>
-          <p className="text-xl text-gray-400">
+          <p className="text-xl text-zinc-400">
             A collection of developer tools to make your life easier
           </p>
         </div>
@@ -46,13 +46,13 @@ export function Home() {
             <Link
               key={tool.path}
               to={tool.path}
-              className="hover:bg-gray-750 group rounded-xl border border-gray-700 bg-gray-800 p-6 transition-all hover:border-orange-500"
+              className="group rounded-xl border border-zinc-600 bg-zinc-700 p-6 transition-all hover:border-orange-500 hover:bg-zinc-600"
             >
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-gray-700 text-orange-500 transition-colors group-hover:bg-orange-600 group-hover:text-white">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-zinc-600 text-orange-500 transition-colors group-hover:bg-orange-600 group-hover:text-white">
                 {tool.icon}
               </div>
               <h3 className="mb-2 text-xl font-semibold text-white">{tool.name}</h3>
-              <p className="text-gray-400">{tool.description}</p>
+              <p className="text-zinc-400">{tool.description}</p>
               <div className="mt-4 flex items-center text-orange-500 transition-colors group-hover:text-orange-400">
                 <span className="text-sm font-medium">Open tool</span>
                 <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -39,13 +39,13 @@ export function Dropdown({ options, value, onChange, placeholder }: DropdownProp
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-lg border border-gray-600 bg-gray-700 px-4 py-2.5 text-left text-white transition-colors hover:border-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+        className="flex w-full items-center justify-between rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-left text-white transition-colors hover:border-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
       >
-        <span className={selectedOption ? 'text-white' : 'text-gray-400'}>
+        <span className={selectedOption ? 'text-white' : 'text-zinc-400'}>
           {selectedOption ? selectedOption.label : placeholder || 'Select an option'}
         </span>
         <svg
-          className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-5 w-5 text-zinc-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ export function Dropdown({ options, value, onChange, placeholder }: DropdownProp
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 shadow-xl">
+        <div className="absolute z-10 mt-1 w-full rounded-lg border border-zinc-500 bg-zinc-600 shadow-xl">
           <div className="max-h-60 overflow-auto py-1">
             {options.map((option) => (
               <button
@@ -65,7 +65,7 @@ export function Dropdown({ options, value, onChange, placeholder }: DropdownProp
                 className={`w-full px-4 py-2.5 text-left transition-colors ${
                   value === option.value
                     ? 'bg-orange-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-600 hover:text-white'
+                    : 'text-zinc-300 hover:bg-zinc-500 hover:text-white'
                 }`}
               >
                 {option.label}

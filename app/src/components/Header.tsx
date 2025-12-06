@@ -20,7 +20,7 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-700 bg-gray-900 shadow-lg">
+    <header className="sticky top-0 z-50 border-b border-zinc-700 bg-zinc-900 shadow-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
@@ -43,7 +43,7 @@ export function Header() {
                 className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors ${
                   location.pathname === tab.path
                     ? 'bg-orange-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                    : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
                 }`}
               >
                 {tab.icon}

@@ -6,7 +6,7 @@ import { UUIDPage } from './pages/UUIDPage';
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="flex min-h-screen flex-col bg-zinc-800">
         <Header />
         <div className="flex-1">
           <Routes>
