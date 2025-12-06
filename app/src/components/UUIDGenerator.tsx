@@ -96,10 +96,10 @@ export function UUIDGenerator() {
       // Check what's missing and create appropriate error message
       const missingFields = [];
       if (!namespace) missingFields.push('namespace');
-      if (!name) missingFields.push('name');
+      if (!name) missingFields.push('value');
 
       if (missingFields.length > 0) {
-        const fieldList = missingFields.length === 2 ? 'namespace and name' : missingFields[0];
+        const fieldList = missingFields.length === 2 ? 'namespace and value' : missingFields[0];
         setModalMessage(`Please provide a ${fieldList} for UUID v5`);
         setShowModal(true);
         return;
@@ -224,15 +224,15 @@ export function UUIDGenerator() {
             </div>
 
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-medium text-zinc-300">
-                Name
+              <label htmlFor="value" className="mb-2 block text-sm font-medium text-zinc-300">
+                Value
               </label>
               <input
                 type="text"
-                id="name"
+                id="value"
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                placeholder="Enter a name (e.g., example.com)"
+                placeholder="Enter a value (e.g., example.com)"
                 className="w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               />
             </div>
@@ -419,7 +419,7 @@ export function UUIDGenerator() {
           <p className="text-sm text-zinc-400">
             {version === 'v4'
               ? 'Generates a random UUID using cryptographically strong random values. Each UUID is unique and unpredictable.'
-              : 'Generates a deterministic UUID based on a namespace and name using SHA-1 hashing. The same namespace and name will always produce the same UUID.'}
+              : 'Generates a deterministic UUID based on a namespace and value using SHA-1 hashing. The same namespace and value will always produce the same UUID.'}
           </p>
         </div>
       </div>
