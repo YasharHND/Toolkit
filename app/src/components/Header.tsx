@@ -35,6 +35,13 @@ export function Header() {
             <h1 className="text-xl font-bold text-white">Toolkit</h1>
           </Link>
 
+          <a
+            href="https://yashar.one"
+            className="text-lg font-semibold text-zinc-300 transition-colors hover:text-orange-400"
+          >
+            YasharHND
+          </a>
+
           <nav className="flex gap-1">
             {tabs.map((tab) => (
               <Link
