@@ -2,10 +2,10 @@ import { Link, useLocation } from 'react-router-dom';
 
 export function Header() {
   const location = useLocation();
-  const tabs = [
+  const tools = [
     {
       path: '/uuid',
-      label: 'UUID',
+      label: 'UUID Generator',
       icon: (
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -17,13 +17,34 @@ export function Header() {
         </svg>
       ),
     },
+    {
+      path: '/unescape',
+      label: 'Unescape Text',
+      icon: (
+        <svg className="h-4 w-4" viewBox="0 0 24 24">
+          <text
+            x="12"
+            y="17"
+            textAnchor="middle"
+            fontSize="18"
+            fontWeight="bold"
+            fontFamily="monospace"
+            fill="currentColor"
+          >
+            \
+          </text>
+        </svg>
+      ),
+    },
   ];
+
+  const currentTool = tools.find((tool) => tool.path === location.pathname);
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-700 bg-zinc-900 shadow-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
+          <Link to="/" className="flex w-52 items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
               <svg className="h-6 w-6" viewBox="0 0 512 512">
                 <path
@@ -42,21 +63,69 @@ export function Header() {
             YasharHND
           </a>
 
-          <nav className="flex gap-1">
-            {tabs.map((tab) => (
-              <Link
-                key={tab.path}
-                to={tab.path}
-                className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors ${
-                  location.pathname === tab.path
+          {/* Tools Dropdown */}
+          <nav className="relative flex w-52 justify-end">
+            <div className="group">
+              <button
+                className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 font-medium transition-colors ${
+                  currentTool
                     ? 'bg-orange-600 text-white'
                     : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
                 }`}
               >
-                {tab.icon}
-                {tab.label}
-              </Link>
-            ))}
+                {currentTool ? (
+                  <>
+                    {currentTool.icon}
+                    {currentTool.label}
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    </svg>
+                    Tools
+                  </>
+                )}
+                <svg
+                  className="h-4 w-4 transition-transform group-hover:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              <div className="invisible absolute right-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                <div className="min-w-48 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-800 shadow-xl">
+                  {tools.map((tool) => (
+                    <Link
+                      key={tool.path}
+                      to={tool.path}
+                      className={`flex items-center gap-3 px-4 py-3 transition-colors ${
+                        location.pathname === tool.path
+                          ? 'bg-orange-600 text-white'
+                          : 'text-zinc-300 hover:bg-zinc-700 hover:text-white'
+                      }`}
+                    >
+                      {tool.icon}
+                      {tool.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
           </nav>
         </div>
       </div>

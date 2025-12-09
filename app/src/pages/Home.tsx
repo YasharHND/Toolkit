@@ -17,6 +17,27 @@ export function Home() {
         </svg>
       ),
     },
+    {
+      name: 'Unescape Text',
+      description: 'Convert escaped characters back to their original form',
+      path: '/unescape',
+      icon: (
+        <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <text
+            x="12"
+            y="17"
+            textAnchor="middle"
+            fontSize="18"
+            fontWeight="bold"
+            fontFamily="monospace"
+            fill="currentColor"
+            stroke="none"
+          >
+            \
+          </text>
+        </svg>
+      ),
+    },
   ];
 
   return (

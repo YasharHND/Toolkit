@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Home } from './pages/Home';
 import { UUIDPage } from './pages/UUIDPage';
+import { UnescapePage } from './pages/UnescapePage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/uuid" element={<UUIDPage />} />
+            <Route path="/unescape" element={<UnescapePage />} />
           </Routes>
         </div>
       </div>
