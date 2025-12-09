@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Home } from './pages/Home';
 import { UUIDPage } from './pages/UUIDPage';
 import { UnescapePage } from './pages/UnescapePage';
+import { JsonPage } from './pages/JsonPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/uuid" element={<UUIDPage />} />
             <Route path="/unescape" element={<UnescapePage />} />
+            <Route path="/json" element={<JsonPage />} />
           </Routes>
         </div>
       </div>

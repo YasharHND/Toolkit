@@ -38,6 +38,26 @@ export function Home() {
         </svg>
       ),
     },
+    {
+      name: 'JSON Formatter',
+      description: 'Beautify or minify JSON with customizable indentation',
+      path: '/json',
+      icon: (
+        <svg className="h-8 w-8" viewBox="0 0 24 24">
+          <text
+            x="12"
+            y="17"
+            textAnchor="middle"
+            fontSize="14"
+            fontWeight="bold"
+            fontFamily="monospace"
+            fill="currentColor"
+          >
+            {'{}'}
+          </text>
+        </svg>
+      ),
+    },
   ];
 
   return (
