@@ -55,6 +55,20 @@ export function Header() {
         </svg>
       ),
     },
+    {
+      path: '/password',
+      label: 'Password Generator',
+      icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+          />
+        </svg>
+      ),
+    },
   ];
 
   const currentTool = tools.find((tool) => tool.path === location.pathname);
@@ -127,12 +141,12 @@ export function Header() {
 
               {/* Dropdown Menu */}
               <div className="invisible absolute right-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-                <div className="min-w-48 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-800 shadow-xl">
+                <div className="overflow-hidden rounded-lg border border-zinc-700 bg-zinc-800 shadow-xl">
                   {tools.map((tool) => (
                     <Link
                       key={tool.path}
                       to={tool.path}
-                      className={`flex items-center gap-3 px-4 py-3 transition-colors ${
+                      className={`flex items-center gap-3 whitespace-nowrap px-4 py-3 transition-colors ${
                         location.pathname === tool.path
                           ? 'bg-orange-600 text-white'
                           : 'text-zinc-300 hover:bg-zinc-700 hover:text-white'

@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { UUIDPage } from './pages/UUIDPage';
 import { UnescapePage } from './pages/UnescapePage';
 import { JsonPage } from './pages/JsonPage';
+import { PasswordPage } from './pages/PasswordPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/uuid" element={<UUIDPage />} />
             <Route path="/unescape" element={<UnescapePage />} />
             <Route path="/json" element={<JsonPage />} />
+            <Route path="/password" element={<PasswordPage />} />
           </Routes>
         </div>
       </div>
