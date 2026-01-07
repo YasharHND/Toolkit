@@ -69,6 +69,25 @@ export function Header() {
         </svg>
       ),
     },
+    {
+      path: '/url-encode',
+      label: 'URL Encode/Decode',
+      icon: (
+        <svg className="h-4 w-4" viewBox="0 0 24 24">
+          <text
+            x="12"
+            y="17"
+            textAnchor="middle"
+            fontSize="16"
+            fontWeight="bold"
+            fontFamily="monospace"
+            fill="currentColor"
+          >
+            %
+          </text>
+        </svg>
+      ),
+    },
   ];
 
   const currentTool = tools.find((tool) => tool.path === location.pathname);

@@ -73,6 +73,26 @@ export function Home() {
         </svg>
       ),
     },
+    {
+      name: 'URL Encode/Decode',
+      description: 'Encode or decode URL-safe strings with percent encoding',
+      path: '/url-encode',
+      icon: (
+        <svg className="h-8 w-8" viewBox="0 0 24 24">
+          <text
+            x="12"
+            y="17"
+            textAnchor="middle"
+            fontSize="14"
+            fontWeight="bold"
+            fontFamily="monospace"
+            fill="currentColor"
+          >
+            %
+          </text>
+        </svg>
+      ),
+    },
   ];
 
   return (

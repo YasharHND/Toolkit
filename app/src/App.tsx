@@ -5,6 +5,7 @@ import { UUIDPage } from './pages/UUIDPage';
 import { UnescapePage } from './pages/UnescapePage';
 import { JsonPage } from './pages/JsonPage';
 import { PasswordPage } from './pages/PasswordPage';
+import { UrlEncodePage } from './pages/UrlEncodePage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/unescape" element={<UnescapePage />} />
             <Route path="/json" element={<JsonPage />} />
             <Route path="/password" element={<PasswordPage />} />
+            <Route path="/url-encode" element={<UrlEncodePage />} />
           </Routes>
         </div>
       </div>
