@@ -2,7 +2,78 @@ import { useState } from 'react';
 import { Modal } from './Modal';
 import { Dropdown } from './Dropdown';
 
-type UUIDVersion = 'v4' | 'v5';
+type UUIDVersion = 'v4' | 'v5' | 'v7';
+
+// UUID v4 generator (random)
+const generateUUIDv4 = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
+// UUID v5 generator (name-based, SHA-1)
+const generateUUIDv5 = async (namespace: string, name: string): Promise<string> => {
+  const namespaces: Record<string, string> = {
+    DNS: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+    URL: '6ba7b811-9dad-11d1-80b4-00c04fd430c8',
+    OID: '6ba7b812-9dad-11d1-80b4-00c04fd430c8',
+    X500: '6ba7b814-9dad-11d1-80b4-00c04fd430c8',
+  };
+
+  const ns = namespaces[namespace] || namespace;
+
+  // Convert namespace UUID to bytes
+  const nsBytes =
+    ns
+      .replace(/-/g, '')
+      .match(/.{2}/g)
+      ?.map((byte) => parseInt(byte, 16)) || [];
+
+  // Convert name to bytes
+  const nameBytes = new TextEncoder().encode(name);
+
+  // Combine namespace and name
+  const combined = new Uint8Array([...nsBytes, ...nameBytes]);
+
+  // Generate SHA-1 hash
+  const hashBuffer = await crypto.subtle.digest('SHA-1', combined);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+  // Set version (5) and variant bits
+  hashArray[6] = (hashArray[6] & 0x0f) | 0x50;
+  hashArray[8] = (hashArray[8] & 0x3f) | 0x80;
+
+  // Convert to UUID format
+  const hex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+};
+
+// UUID v7 generator (time-ordered)
+const generateUUIDv7 = (): string => {
+  const now = Date.now();
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+
+  // First 48 bits: Unix timestamp in milliseconds
+  bytes[0] = (now / 2 ** 40) & 0xff;
+  bytes[1] = (now / 2 ** 32) & 0xff;
+  bytes[2] = (now / 2 ** 24) & 0xff;
+  bytes[3] = (now / 2 ** 16) & 0xff;
+  bytes[4] = (now / 2 ** 8) & 0xff;
+  bytes[5] = now & 0xff;
+
+  // Version 7
+  bytes[6] = (bytes[6] & 0x0f) | 0x70;
+  // Variant 10xx
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+  const hex = Array.from(bytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+};
 
 export function UUIDGenerator() {
   const [version, setVersion] = useState<UUIDVersion>('v4');
@@ -23,75 +94,48 @@ export function UUIDGenerator() {
     setV5Copied(false);
     setV5CopiedPermanent(false);
   };
-  const [count, setCount] = useState(1);
-
   // Separate states for each version
+  const [v4Count, setV4Count] = useState(1);
   const [v4UUIDs, setV4UUIDs] = useState<string[]>([]);
-  const [v5UUID, setV5UUID] = useState('');
   const [v4Copied, setV4Copied] = useState(false);
+  const [v4CopiedIndices, setV4CopiedIndices] = useState<boolean[]>([]);
+  const [v4CopiedButtonStates, setV4CopiedButtonStates] = useState<boolean[]>([]);
+
+  const [v5UUID, setV5UUID] = useState('');
   const [v5Copied, setV5Copied] = useState(false);
   const [v5CopiedPermanent, setV5CopiedPermanent] = useState(false);
-  const [copiedIndices, setCopiedIndices] = useState<boolean[]>([]);
-  const [copiedButtonStates, setCopiedButtonStates] = useState<boolean[]>([]);
+
+  const [v7Count, setV7Count] = useState(1);
+  const [v7UUIDs, setV7UUIDs] = useState<string[]>([]);
+  const [v7Copied, setV7Copied] = useState(false);
+  const [v7CopiedIndices, setV7CopiedIndices] = useState<boolean[]>([]);
+  const [v7CopiedButtonStates, setV7CopiedButtonStates] = useState<boolean[]>([]);
+
+  // Derive active bulk-UUID state based on version
+  const isV7 = version === 'v7';
+  const count = isV7 ? v7Count : v4Count;
+  const setCount = isV7 ? setV7Count : setV4Count;
+  const currentUUIDs = isV7 ? v7UUIDs : v4UUIDs;
+  const currentCopied = isV7 ? v7Copied : v4Copied;
+  const currentCopiedIndices = isV7 ? v7CopiedIndices : v4CopiedIndices;
+  const currentCopiedButtonStates = isV7 ? v7CopiedButtonStates : v4CopiedButtonStates;
+  const setCurrentUUIDs = isV7 ? setV7UUIDs : setV4UUIDs;
+  const setCurrentCopied = isV7 ? setV7Copied : setV4Copied;
+  const setCurrentCopiedIndices = isV7 ? setV7CopiedIndices : setV4CopiedIndices;
+  const setCurrentCopiedButtonStates = isV7 ? setV7CopiedButtonStates : setV4CopiedButtonStates;
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  // UUID v4 generator
-  const generateUUIDv4 = (): string => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  };
-
-  // UUID v5 generator (using SHA-1)
-  const generateUUIDv5 = async (namespace: string, name: string): Promise<string> => {
-    // Predefined namespaces
-    const namespaces: Record<string, string> = {
-      DNS: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
-      URL: '6ba7b811-9dad-11d1-80b4-00c04fd430c8',
-      OID: '6ba7b812-9dad-11d1-80b4-00c04fd430c8',
-      X500: '6ba7b814-9dad-11d1-80b4-00c04fd430c8',
-    };
-
-    const ns = namespaces[namespace] || namespace;
-
-    // Convert namespace UUID to bytes
-    const nsBytes =
-      ns
-        .replace(/-/g, '')
-        .match(/.{2}/g)
-        ?.map((byte) => parseInt(byte, 16)) || [];
-
-    // Convert name to bytes
-    const nameBytes = new TextEncoder().encode(name);
-
-    // Combine namespace and name
-    const combined = new Uint8Array([...nsBytes, ...nameBytes]);
-
-    // Generate SHA-1 hash
-    const hashBuffer = await crypto.subtle.digest('SHA-1', combined);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-    // Set version (5) and variant bits
-    hashArray[6] = (hashArray[6] & 0x0f) | 0x50;
-    hashArray[8] = (hashArray[8] & 0x3f) | 0x80;
-
-    // Convert to UUID format
-    const hex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
-  };
-
   const handleGenerate = async () => {
-    if (version === 'v4') {
-      const uuids = Array.from({ length: count }, () => generateUUIDv4());
-      setV4UUIDs(uuids);
-      setV4Copied(false);
-      setCopiedIndices(new Array(uuids.length).fill(false));
-      setCopiedButtonStates(new Array(uuids.length).fill(false));
+    if (version === 'v4' || version === 'v7') {
+      const generator = version === 'v4' ? generateUUIDv4 : generateUUIDv7;
+      const uuids = Array.from({ length: count }, () => generator());
+      setCurrentUUIDs(uuids);
+      setCurrentCopied(false);
+      setCurrentCopiedIndices(new Array(uuids.length).fill(false));
+      setCurrentCopiedButtonStates(new Array(uuids.length).fill(false));
     } else {
       // Check what's missing and create appropriate error message
       const missingFields = [];
@@ -114,21 +158,21 @@ export function UUIDGenerator() {
 
   const handleCopy = async (uuid: string, index?: number) => {
     await navigator.clipboard.writeText(uuid);
-    if (version === 'v4') {
+    if (version === 'v4' || version === 'v7') {
       if (index !== undefined) {
         // Mark this specific UUID as copied permanently
-        const newCopiedStates = [...(copiedIndices || [])];
+        const newCopiedStates = [...(currentCopiedIndices || [])];
         newCopiedStates[index] = true;
-        setCopiedIndices(newCopiedStates);
+        setCurrentCopiedIndices(newCopiedStates);
 
         // Show button feedback temporarily
-        setCopiedButtonStates((prev) => {
+        setCurrentCopiedButtonStates((prev) => {
           const newButtonStates = [...prev];
           newButtonStates[index] = true;
           return newButtonStates;
         });
         setTimeout(() => {
-          setCopiedButtonStates((prev) => {
+          setCurrentCopiedButtonStates((prev) => {
             const resetStates = [...prev];
             resetStates[index] = false;
             return resetStates;
@@ -146,14 +190,14 @@ export function UUIDGenerator() {
   };
 
   const handleCopyAll = async () => {
-    if (v4UUIDs.length > 0) {
-      await navigator.clipboard.writeText(v4UUIDs.join('\n'));
+    if (currentUUIDs.length > 0) {
+      await navigator.clipboard.writeText(currentUUIDs.join('\n'));
       // Mark all as copied permanently
-      setCopiedIndices(new Array(v4UUIDs.length).fill(true));
+      setCurrentCopiedIndices(new Array(currentUUIDs.length).fill(true));
 
       // Show button feedback temporarily
-      setV4Copied(true);
-      setTimeout(() => setV4Copied(false), 2000);
+      setCurrentCopied(true);
+      setTimeout(() => setCurrentCopied(false), 2000);
     }
   };
 
@@ -187,6 +231,17 @@ export function UUIDGenerator() {
             >
               <div className="text-lg">Version 5</div>
               <div className="text-xs opacity-80">Name-based (SHA-1)</div>
+            </button>
+            <button
+              onClick={() => setVersion('v7')}
+              className={`flex-1 rounded-lg border-2 px-4 py-3 font-medium transition-all ${
+                version === 'v7'
+                  ? 'border-orange-600 bg-orange-600 text-white'
+                  : 'border-zinc-500 bg-zinc-600 text-zinc-300 hover:border-orange-500 hover:text-white'
+              }`}
+            >
+              <div className="text-lg">Version 7</div>
+              <div className="text-xs opacity-80">Time-ordered</div>
             </button>
           </div>
         </div>
@@ -241,7 +296,7 @@ export function UUIDGenerator() {
 
         {/* Count Input for v4 and Generate Button */}
         <div className="flex gap-3">
-          {version === 'v4' && (
+          {(version === 'v4' || version === 'v7') && (
             <div className="relative w-32">
               <input
                 type="text"
@@ -290,27 +345,27 @@ export function UUIDGenerator() {
             onClick={handleGenerate}
             className="flex-1 rounded-lg bg-gradient-to-r from-orange-600 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:from-orange-700 hover:to-orange-600 active:scale-[0.98]"
           >
-            Generate UUID{version === 'v4' && count > 1 ? 's' : ''}
+            Generate UUID{(version === 'v4' || version === 'v7') && count > 1 ? 's' : ''}
           </button>
         </div>
 
         {/* Generated UUID Display */}
-        {version === 'v4' && v4UUIDs.length > 0 && (
-          <div className="mt-6" key="uuid-display-v4">
+        {(version === 'v4' || version === 'v7') && currentUUIDs.length > 0 && (
+          <div className="mt-6" key={`uuid-display-${version}`}>
             <div className="mb-2 flex items-center justify-between">
               <label className="text-sm font-medium text-zinc-300">
-                Generated UUID{v4UUIDs.length > 1 ? 's' : ''}
+                Generated UUID{currentUUIDs.length > 1 ? 's' : ''}
               </label>
-              {v4UUIDs.length > 1 && (
+              {currentUUIDs.length > 1 && (
                 <button
                   onClick={handleCopyAll}
                   className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
-                    v4Copied
+                    currentCopied
                       ? 'bg-orange-600 text-white'
                       : 'bg-zinc-600 text-zinc-300 hover:bg-zinc-500 hover:text-white'
                   }`}
                 >
-                  {v4Copied ? (
+                  {currentCopied ? (
                     <span className="flex items-center gap-2">
                       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -328,14 +383,14 @@ export function UUIDGenerator() {
               )}
             </div>
             <div className="space-y-2">
-              {v4UUIDs.map((uuid, index) => (
+              {currentUUIDs.map((uuid, index) => (
                 <div key={index} className="flex gap-2">
                   <input
                     type="text"
                     value={uuid}
                     readOnly
                     className={`flex-1 rounded-lg border px-4 py-2.5 font-mono transition-colors focus:outline-none ${
-                      copiedIndices[index] || v4Copied
+                      currentCopiedIndices[index] || currentCopied
                         ? 'border-zinc-600 bg-zinc-800 text-zinc-500'
                         : 'border-zinc-500 bg-zinc-900 text-white'
                     }`}
@@ -343,12 +398,12 @@ export function UUIDGenerator() {
                   <button
                     onClick={() => handleCopy(uuid, index)}
                     className={`rounded-lg px-6 py-2.5 font-medium transition-all ${
-                      copiedButtonStates[index]
+                      currentCopiedButtonStates[index]
                         ? 'bg-orange-600 text-white'
                         : 'bg-zinc-600 text-zinc-300 hover:bg-zinc-500 hover:text-white'
                     }`}
                   >
-                    {copiedButtonStates[index] ? (
+                    {currentCopiedButtonStates[index] ? (
                       <span className="flex items-center gap-2">
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                           <path
@@ -414,12 +469,18 @@ export function UUIDGenerator() {
         {/* Info Section */}
         <div className="mt-6 rounded-lg bg-zinc-800 p-4">
           <h3 className="mb-2 font-semibold text-orange-500">
-            {version === 'v4' ? 'UUID Version 4' : 'UUID Version 5'}
+            {version === 'v4'
+              ? 'UUID Version 4'
+              : version === 'v5'
+                ? 'UUID Version 5'
+                : 'UUID Version 7'}
           </h3>
           <p className="text-sm text-zinc-400">
             {version === 'v4'
               ? 'Generates a random UUID using cryptographically strong random values. Each UUID is unique and unpredictable.'
-              : 'Generates a deterministic UUID based on a namespace and value using SHA-1 hashing. The same namespace and value will always produce the same UUID.'}
+              : version === 'v5'
+                ? 'Generates a deterministic UUID based on a namespace and value using SHA-1 hashing. The same namespace and value will always produce the same UUID.'
+                : 'Generates a time-ordered UUID with a Unix timestamp in the first 48 bits followed by random data. UUIDs are sortable by creation time, making them ideal for database primary keys.'}
           </p>
         </div>
       </div>
