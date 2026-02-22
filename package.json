@@ -11,11 +11,11 @@
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
     "prepare": "husky",
-    "infra": "dotenv -e .env -- cdk",
-    "infra:synth": "dotenv -e .env -- cdk synth",
-    "infra:deploy": "pnpm build && dotenv -e .env -- cdk deploy --require-approval never",
-    "infra:destroy": "dotenv -e .env -- cdk destroy",
-    "infra:diff": "dotenv -e .env -- cdk diff"
+    "infra": "cdk",
+    "infra:synth": "cdk synth",
+    "infra:deploy": "cdk deploy --require-approval never",
+    "infra:destroy": "cdk destroy",
+    "infra:diff": "cdk diff"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.232.1",
