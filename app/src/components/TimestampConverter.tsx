@@ -317,6 +317,7 @@ export function TimestampConverter() {
   const [epochInput, setEpochInput] = useState('');
   const [epochUnitChoice, setEpochUnitChoice] = useState<EpochUnitChoice>('auto');
   const [humanInput, setHumanInput] = useState('');
+  const [humanInputTz, setHumanInputTz] = useState(localTz);
 
   const [copied, setCopied] = useState<string | null>(null);
   const copy = (key: string, value: string) => {
@@ -349,10 +350,10 @@ export function TimestampConverter() {
     if (!trimmed) return null;
     const parsed = parseDatetimeLocal(trimmed);
     if (!parsed) return { kind: 'err', error: 'Use format YYYY-MM-DDTHH:MM:SS.sss' };
-    const millis = wallClockToEpochMillis(parsed, tz);
+    const millis = wallClockToEpochMillis(parsed, humanInputTz);
     if (Math.abs(millis) > 8.64e15) return { kind: 'err', error: 'Outside JavaScript Date range' };
     return { kind: 'ok', date: new Date(millis), millis };
-  }, [humanInput, tz]);
+  }, [humanInput, humanInputTz]);
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -461,13 +462,19 @@ export function TimestampConverter() {
         </div>
         <div className="mt-4 flex flex-wrap gap-3">
           <button
-            onClick={() => setEpochInput(formatMillisAs(Date.now(), 'milliseconds'))}
+            onClick={() => {
+              setEpochInput(formatMillisAs(Date.now(), 'milliseconds'));
+              setEpochUnitChoice('auto');
+            }}
             className={SECONDARY_BTN_CLASS}
           >
             Use now in Epoch input
           </button>
           <button
-            onClick={() => setHumanInput(nowAsDatetimeLocal(new Date(), tz))}
+            onClick={() => {
+              setHumanInput(nowAsDatetimeLocal(new Date(), tz));
+              setHumanInputTz(tz);
+            }}
             className={SECONDARY_BTN_CLASS}
           >
             Use now in Human input
@@ -566,16 +573,29 @@ export function TimestampConverter() {
         <h3 className="mb-4 text-lg font-semibold text-white">Human → Epoch</h3>
         <div className="mb-4">
           <label htmlFor="human-input" className="mb-2 block text-sm font-medium text-zinc-300">
-            Wall-clock date in {tz}
+            Wall-clock date in {humanInputTz}
           </label>
           <input
             id="human-input"
             value={humanInput}
-            onChange={(e) => setHumanInput(e.target.value)}
+            onChange={(e) => {
+              setHumanInput(e.target.value);
+              setHumanInputTz(tz);
+            }}
             placeholder="2026-05-02T14:30:45.123"
             className={INPUT_CLASS}
           />
-          <p className="mt-1 text-xs text-zinc-500">Format: YYYY-MM-DDTHH:MM:SS.sss</p>
+          <p className="mt-1 text-xs text-zinc-500">
+            Format: YYYY-MM-DDTHH:MM:SS.sss · interpreted in {humanInputTz}
+            {humanInputTz !== tz && (
+              <button
+                onClick={() => setHumanInputTz(tz)}
+                className="ml-2 text-orange-400 hover:text-orange-300"
+              >
+                reinterpret in {tz}
+              </button>
+            )}
+          </p>
         </div>
         {humanResult?.kind === 'err' && (
           <p className="mb-4 text-sm text-red-400">{humanResult.error}</p>
