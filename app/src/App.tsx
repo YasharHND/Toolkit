@@ -6,6 +6,7 @@ import { UnescapePage } from './pages/UnescapePage';
 import { JsonPage } from './pages/JsonPage';
 import { PasswordPage } from './pages/PasswordPage';
 import { UrlEncodePage } from './pages/UrlEncodePage';
+import { TimestampPage } from './pages/TimestampPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/json" element={<JsonPage />} />
             <Route path="/password" element={<PasswordPage />} />
             <Route path="/url-encode" element={<UrlEncodePage />} />
+            <Route path="/timestamp" element={<TimestampPage />} />
           </Routes>
         </div>
       </div>
