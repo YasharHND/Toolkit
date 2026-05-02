@@ -29,11 +29,10 @@ export function Dropdown({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  const filtered = searchable && search.trim()
-    ? options.filter((opt) =>
-        opt.label.toLowerCase().includes(search.trim().toLowerCase())
-      )
-    : options;
+  const filtered =
+    searchable && search.trim()
+      ? options.filter((opt) => opt.label.toLowerCase().includes(search.trim().toLowerCase()))
+      : options;
 
   const close = () => {
     setIsOpen(false);

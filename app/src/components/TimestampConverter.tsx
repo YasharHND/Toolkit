@@ -308,9 +308,8 @@ export function TimestampConverter() {
   const localTz = useMemo(() => Intl.DateTimeFormat().resolvedOptions().timeZone, []);
   const [tz, setTz] = useState(localTz);
   const allZones = useMemo(() => {
-    const supportedFn = (
-      Intl as unknown as { supportedValuesOf?: (k: string) => string[] }
-    ).supportedValuesOf;
+    const supportedFn = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] })
+      .supportedValuesOf;
     const supported = supportedFn ? supportedFn('timeZone') : [];
     return Array.from(new Set(['UTC', localTz, ...supported]));
   }, [localTz]);
@@ -332,9 +331,7 @@ export function TimestampConverter() {
   type EpochResult =
     | { kind: 'ok'; date: Date; unit: EpochUnit; millis: number }
     | { kind: 'err'; error: string };
-  type HumanResult =
-    | { kind: 'ok'; date: Date; millis: number }
-    | { kind: 'err'; error: string };
+  type HumanResult = { kind: 'ok'; date: Date; millis: number } | { kind: 'err'; error: string };
 
   const epochResult = useMemo<EpochResult | null>(() => {
     const trimmed = epochInput.trim();
@@ -343,8 +340,7 @@ export function TimestampConverter() {
       epochUnitChoice === 'auto' ? detectEpochUnit(Number(trimmed)) : epochUnitChoice;
     const millis = parseEpochToMillis(trimmed, probeUnit);
     if (millis === null) return { kind: 'err', error: 'Enter a valid number' };
-    if (Math.abs(millis) > 8.64e15)
-      return { kind: 'err', error: 'Outside JavaScript Date range' };
+    if (Math.abs(millis) > 8.64e15) return { kind: 'err', error: 'Outside JavaScript Date range' };
     return { kind: 'ok', date: new Date(millis), unit: probeUnit, millis };
   }, [epochInput, epochUnitChoice]);
 
@@ -354,8 +350,7 @@ export function TimestampConverter() {
     const parsed = parseDatetimeLocal(trimmed);
     if (!parsed) return { kind: 'err', error: 'Use format YYYY-MM-DDTHH:MM:SS.sss' };
     const millis = wallClockToEpochMillis(parsed, tz);
-    if (Math.abs(millis) > 8.64e15)
-      return { kind: 'err', error: 'Outside JavaScript Date range' };
+    if (Math.abs(millis) > 8.64e15) return { kind: 'err', error: 'Outside JavaScript Date range' };
     return { kind: 'ok', date: new Date(millis), millis };
   }, [humanInput, tz]);
 
@@ -390,9 +385,7 @@ export function TimestampConverter() {
             </button>
           )}
           <span className="ml-2 text-zinc-600">·</span>
-          <span className="ml-2">
-            UTC offset: {offsetToString(tzOffsetMillis(nowDate, tz))}
-          </span>
+          <span className="ml-2">UTC offset: {offsetToString(tzOffsetMillis(nowDate, tz))}</span>
         </p>
       </div>
 
@@ -508,9 +501,7 @@ export function TimestampConverter() {
             {epochUnitChoice === 'auto' && (
               <p className="px-1 text-xs text-zinc-500">
                 Detected unit:{' '}
-                <span className="font-medium text-orange-400">
-                  {UNIT_LABEL[epochResult.unit]}
-                </span>
+                <span className="font-medium text-orange-400">{UNIT_LABEL[epochResult.unit]}</span>
               </p>
             )}
             <Row
@@ -541,9 +532,7 @@ export function TimestampConverter() {
               label="Day of week"
               value={formatComponents(epochResult.date, tz).weekday}
               copied={copied === 'eh-dow'}
-              onCopy={() =>
-                copy('eh-dow', formatComponents(epochResult.date, tz).weekday)
-              }
+              onCopy={() => copy('eh-dow', formatComponents(epochResult.date, tz).weekday)}
             />
             <Row
               label="Day of year"
@@ -567,9 +556,7 @@ export function TimestampConverter() {
               label="Relative"
               value={relativeTime(epochResult.date.getTime(), tick)}
               copied={copied === 'eh-rel'}
-              onCopy={() =>
-                copy('eh-rel', relativeTime(epochResult.date.getTime(), tick))
-              }
+              onCopy={() => copy('eh-rel', relativeTime(epochResult.date.getTime(), tick))}
             />
           </div>
         )}
@@ -605,25 +592,19 @@ export function TimestampConverter() {
               label="Milliseconds"
               value={formatMillisAs(humanResult.millis, 'milliseconds')}
               copied={copied === 'he-ms'}
-              onCopy={() =>
-                copy('he-ms', formatMillisAs(humanResult.millis, 'milliseconds'))
-              }
+              onCopy={() => copy('he-ms', formatMillisAs(humanResult.millis, 'milliseconds'))}
             />
             <Row
               label="Microseconds"
               value={formatMillisAs(humanResult.millis, 'microseconds')}
               copied={copied === 'he-us'}
-              onCopy={() =>
-                copy('he-us', formatMillisAs(humanResult.millis, 'microseconds'))
-              }
+              onCopy={() => copy('he-us', formatMillisAs(humanResult.millis, 'microseconds'))}
             />
             <Row
               label="Nanoseconds"
               value={formatMillisAs(humanResult.millis, 'nanoseconds')}
               copied={copied === 'he-ns'}
-              onCopy={() =>
-                copy('he-ns', formatMillisAs(humanResult.millis, 'nanoseconds'))
-              }
+              onCopy={() => copy('he-ns', formatMillisAs(humanResult.millis, 'nanoseconds'))}
             />
             <Row
               label="ISO 8601 UTC"
@@ -635,9 +616,7 @@ export function TimestampConverter() {
               label="Relative"
               value={relativeTime(humanResult.date.getTime(), tick)}
               copied={copied === 'he-rel'}
-              onCopy={() =>
-                copy('he-rel', relativeTime(humanResult.date.getTime(), tick))
-              }
+              onCopy={() => copy('he-rel', relativeTime(humanResult.date.getTime(), tick))}
             />
           </div>
         )}
