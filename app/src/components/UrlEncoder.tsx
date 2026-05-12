@@ -131,7 +131,7 @@ export function UrlEncoder() {
                 : 'Enter URL-encoded text (e.g., Hello%20World%21)'
             }
             rows={4}
-            className={`w-full resize-none rounded-lg border px-4 py-3 font-mono text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 ${
+            className={`w-full resize-none rounded-lg border px-4 py-3 font-mono text-sm text-white placeholder-zinc-400 focus:ring-2 focus:ring-orange-500/50 focus:outline-none ${
               error
                 ? 'border-red-500 bg-zinc-600 focus:border-red-500'
                 : 'border-zinc-500 bg-zinc-600 focus:border-orange-500'

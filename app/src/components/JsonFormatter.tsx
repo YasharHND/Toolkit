@@ -152,7 +152,7 @@ export function JsonFormatter() {
               onChange={(e) => handleInputChange(e.target.value)}
               placeholder='{"key": "value", "array": [1, 2, 3]}'
               rows={12}
-              className={`w-full resize-none rounded-lg border px-4 py-3 font-mono text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 ${
+              className={`w-full resize-none rounded-lg border px-4 py-3 font-mono text-sm text-white placeholder-zinc-400 focus:ring-2 focus:ring-orange-500/50 focus:outline-none ${
                 error
                   ? 'border-red-500 bg-zinc-600 focus:border-red-500'
                   : 'border-zinc-500 bg-zinc-600 focus:border-orange-500'

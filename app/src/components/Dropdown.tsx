@@ -66,7 +66,7 @@ export function Dropdown({
       <button
         type="button"
         onClick={() => (isOpen ? close() : setIsOpen(true))}
-        className="flex w-full items-center justify-between rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-left text-white transition-colors hover:border-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+        className="flex w-full items-center justify-between rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-left text-white transition-colors hover:border-zinc-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none"
       >
         <span className={selectedOption ? 'text-white' : 'text-zinc-400'}>
           {selectedOption ? selectedOption.label : placeholder || 'Select an option'}
@@ -87,7 +87,7 @@ export function Dropdown({
             <div className="border-b border-zinc-500 p-2">
               <div className="relative">
                 <svg
-                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+                  className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -108,7 +108,7 @@ export function Dropdown({
                     if (e.key === 'Escape') close();
                   }}
                   placeholder={searchPlaceholder}
-                  className="w-full rounded-md border border-zinc-500 bg-zinc-700 py-2 pl-9 pr-3 text-sm text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                  className="w-full rounded-md border border-zinc-500 bg-zinc-700 py-2 pr-3 pl-9 text-sm text-white placeholder-zinc-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none"
                 />
               </div>
             </div>

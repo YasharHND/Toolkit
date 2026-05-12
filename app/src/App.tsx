@@ -7,6 +7,7 @@ import { JsonPage } from './pages/JsonPage';
 import { PasswordPage } from './pages/PasswordPage';
 import { UrlEncodePage } from './pages/UrlEncodePage';
 import { TimestampPage } from './pages/TimestampPage';
+import { JwtPage } from './pages/JwtPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/password" element={<PasswordPage />} />
             <Route path="/url-encode" element={<UrlEncodePage />} />
             <Route path="/timestamp" element={<TimestampPage />} />
+            <Route path="/jwt" element={<JwtPage />} />
           </Routes>
         </div>
       </div>

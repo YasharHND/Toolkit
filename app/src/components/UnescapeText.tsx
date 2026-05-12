@@ -67,7 +67,7 @@ export function UnescapeText() {
             onChange={(e) => handleInputChange(e.target.value)}
             placeholder="Enter escaped text (e.g., Hello\nWorld or Hello\tWorld)"
             rows={6}
-            className="w-full resize-none rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-3 font-mono text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+            className="w-full resize-none rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-3 font-mono text-white placeholder-zinc-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none"
           />
         </div>
 

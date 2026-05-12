@@ -274,7 +274,7 @@ export function UUIDGenerator() {
                   namespace && !['DNS', 'URL', 'OID', 'X500'].includes(namespace) ? namespace : ''
                 }
                 onChange={(e) => handleNamespaceChange(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                className="mt-2 w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none"
               />
             </div>
 
@@ -288,7 +288,7 @@ export function UUIDGenerator() {
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Enter a value (e.g., example.com)"
-                className="w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                className="w-full rounded-lg border border-zinc-500 bg-zinc-600 px-4 py-2.5 text-white placeholder-zinc-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none"
               />
             </div>
           </div>
@@ -305,9 +305,9 @@ export function UUIDGenerator() {
                   const val = parseInt(e.target.value) || 1;
                   setCount(Math.max(1, Math.min(100, val)));
                 }}
-                className="w-full rounded-lg border border-zinc-500 bg-zinc-600 py-3 pl-4 pr-10 text-center text-white [appearance:textfield] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="w-full [appearance:textfield] rounded-lg border border-zinc-500 bg-zinc-600 py-3 pr-10 pl-4 text-center text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
-              <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-0.5">
+              <div className="absolute top-1/2 right-2 flex -translate-y-1/2 flex-col gap-0.5">
                 <button
                   type="button"
                   onClick={() => setCount((c) => Math.min(100, c + 1))}
