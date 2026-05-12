@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface CharacterOptions {
   uppercase: boolean;
@@ -7,41 +7,51 @@ interface CharacterOptions {
   symbols: boolean;
 }
 
+const CHARACTER_SETS = {
+  uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  lowercase: 'abcdefghijklmnopqrstuvwxyz',
+  numbers: '0123456789',
+  symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
+};
+
+function generatePassword(len: number, opts: CharacterOptions): string {
+  let charset = '';
+  if (opts.uppercase) charset += CHARACTER_SETS.uppercase;
+  if (opts.lowercase) charset += CHARACTER_SETS.lowercase;
+  if (opts.numbers) charset += CHARACTER_SETS.numbers;
+  if (opts.symbols) charset += CHARACTER_SETS.symbols;
+
+  if (!charset) return '';
+
+  const array = new Uint32Array(len);
+  crypto.getRandomValues(array);
+
+  return Array.from(array, (num) => charset[num % charset.length]).join('');
+}
+
+const INITIAL_LENGTH = 16;
+const INITIAL_COUNT = 1;
+const INITIAL_OPTIONS: CharacterOptions = {
+  uppercase: true,
+  lowercase: true,
+  numbers: true,
+  symbols: true,
+};
+
 export function PasswordGenerator() {
-  const [length, setLength] = useState(16);
-  const [count, setCount] = useState(1);
-  const [options, setOptions] = useState<CharacterOptions>({
-    uppercase: true,
-    lowercase: true,
-    numbers: true,
-    symbols: true,
-  });
-  const [passwords, setPasswords] = useState<string[]>([]);
+  const [length, setLength] = useState(INITIAL_LENGTH);
+  const [count, setCount] = useState(INITIAL_COUNT);
+  const [options, setOptions] = useState<CharacterOptions>(INITIAL_OPTIONS);
+  const [passwords, setPasswords] = useState<string[]>(() =>
+    Array.from({ length: INITIAL_COUNT }, () => generatePassword(INITIAL_LENGTH, INITIAL_OPTIONS))
+  );
   const [copiedAll, setCopiedAll] = useState(false);
-  const [copiedIndices, setCopiedIndices] = useState<boolean[]>([]);
-  const [copiedButtonStates, setCopiedButtonStates] = useState<boolean[]>([]);
-
-  const characterSets = {
-    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    lowercase: 'abcdefghijklmnopqrstuvwxyz',
-    numbers: '0123456789',
-    symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
-  };
-
-  const generatePassword = (len: number, opts: CharacterOptions): string => {
-    let charset = '';
-    if (opts.uppercase) charset += characterSets.uppercase;
-    if (opts.lowercase) charset += characterSets.lowercase;
-    if (opts.numbers) charset += characterSets.numbers;
-    if (opts.symbols) charset += characterSets.symbols;
-
-    if (!charset) return '';
-
-    const array = new Uint32Array(len);
-    crypto.getRandomValues(array);
-
-    return Array.from(array, (num) => charset[num % charset.length]).join('');
-  };
+  const [copiedIndices, setCopiedIndices] = useState<boolean[]>(() =>
+    new Array(INITIAL_COUNT).fill(false)
+  );
+  const [copiedButtonStates, setCopiedButtonStates] = useState<boolean[]>(() =>
+    new Array(INITIAL_COUNT).fill(false)
+  );
 
   const handleGenerate = () => {
     const newPasswords = Array.from({ length: count }, () => generatePassword(length, options));
@@ -108,12 +118,6 @@ export function PasswordGenerator() {
     }
   };
 
-  // Generate initial password on mount
-  useEffect(() => {
-    handleGenerate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className="mx-auto max-w-3xl">
       <div className="rounded-xl border border-zinc-600 bg-zinc-700 p-8 shadow-xl">
@@ -172,9 +176,9 @@ export function PasswordGenerator() {
               type="text"
               value={count}
               onChange={(e) => handleCountChange(parseInt(e.target.value) || 1)}
-              className="w-full rounded-lg border border-zinc-500 bg-zinc-600 py-3 pl-4 pr-10 text-center text-white [appearance:textfield] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-full [appearance:textfield] rounded-lg border border-zinc-500 bg-zinc-600 py-3 pr-10 pl-4 text-center text-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
-            <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col gap-0.5">
+            <div className="absolute top-1/2 right-2 flex -translate-y-1/2 flex-col gap-0.5">
               <button
                 type="button"
                 onClick={() => handleCountChange(count + 1)}
