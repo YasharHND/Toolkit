@@ -94,6 +94,21 @@ export function Home() {
       ),
     },
     {
+      name: 'Base64 Encode/Decode',
+      description: 'Encode or decode Base64 text, including the URL-safe variant',
+      path: '/base64',
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+          />
+        </svg>
+      ),
+    },
+    {
       name: 'Timestamp Converter',
       description: 'Convert epoch values and dates across timezones, ms, μs, and ns',
       path: '/timestamp',

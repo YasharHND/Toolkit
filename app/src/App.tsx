@@ -6,6 +6,7 @@ import { UnescapePage } from './pages/UnescapePage';
 import { JsonPage } from './pages/JsonPage';
 import { PasswordPage } from './pages/PasswordPage';
 import { UrlEncodePage } from './pages/UrlEncodePage';
+import { Base64Page } from './pages/Base64Page';
 import { TimestampPage } from './pages/TimestampPage';
 import { JwtPage } from './pages/JwtPage';
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/json" element={<JsonPage />} />
             <Route path="/password" element={<PasswordPage />} />
             <Route path="/url-encode" element={<UrlEncodePage />} />
+            <Route path="/base64" element={<Base64Page />} />
             <Route path="/timestamp" element={<TimestampPage />} />
             <Route path="/jwt" element={<JwtPage />} />
           </Routes>
